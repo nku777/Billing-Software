@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Software</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0 2px;
+        }
+
+        input {
+            padding: 8px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .total-section {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media print {
+
+            /* Hide buttons when printing */
+            #generateBillBtn,
+            #printBtn {
+                display: none;
+            }
+        }
+    </style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Billing Software</h2>
+
+        <!-- Customer Info -->
+        <div class="section">
+            <h3>Customer Details</h3>
+            <label>Name:</label><input type="" id="customerName">
+            <label>Contact:</label><input type="number" id="customerContact">
+            <p id="current date"></p>
+        </div>
+
+        <!-- Product Entry -->
+        <div class="section">
+            <h3>Add Product</h3>
+            <label>Item Name:</label><input type="text" id="itemName">
+            <label>Quantity:</label><input type="number" id="quantity" value="1">
+            <label>Price per Unit:</label><input type="number" id="price">
+            <button onclick="addItem()">Add Item</button>
+        </div>
+
+        <!-- Bill Table -->
+        <div class="section">
+            <table id="billTable">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Total Section -->
+        <div class="total-section">
+            <p><strong>Grand Total: ₹<span id="grandTotal">0</span></strong></p>
+            <button onclick="generateBill()" id="generateBillBtn">Generate Bill</button>
+            <button onclick="window.print()" id="printBtn">Print</button>
+        </div>
+    </div>
+
+    <script>
+        let grandTotal = 0;
+        function addItem() {
+            const item = document.getElementById('itemName').value;
+            const qty = parseInt(document.getElementById('quantity').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const total = qty * price;
+
+            if (!item || !price) return alert("Please fill all fields");
+
+            const table = document.getElementById('billTable').getElementsByTagName('tbody')[0];
+            const row = table.insertRow();
+            row.innerHTML = `
+        <td>${item}</td>
+        <td>${qty}</td>
+        <td>${price.toFixed(2)}</td>
+        <td>${total.toFixed(2)}</td>
+        <td><button onclick="removeItem(this, ${total})">X</button></td>
+      `;
+
+            grandTotal += total;
+            document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+
+            document.getElementById('itemName').value = "";
+            document.getElementById('quantity').value = 1;
+            document.getElementById('price').value = "";
+        }
+
+        function removeItem(btn, total) {
+            btn.parentElement.parentElement.remove();
+            grandTotal -= total;
+            document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+        }
+
+        function generateBill(itemNumber) {
+            alert("Bill Generated Successfully!");
+        }
+
+        function printBill() {
+            window.print();
+        }
+    </script>
+</body>
+
+</html>
